@@ -14,7 +14,6 @@ class volume:
         volume.systemvol = float(subprocess.check_output(termcommand))
 
     def updateapps(self):
-        print 'not freeze'
         applist = []
         termcommand = ['osascript','-e','tell application "System Events" to get name of (processes where background only is false)']
         applist = subprocess.check_output(termcommand).split(', ')
@@ -24,20 +23,13 @@ class volume:
             [0:len(applist[len(applist)-1])-1]
         print 'not freeze 2'
         # takes away new line char at the end of last list item
-        #if 'Python' in applist:
-            #volume.applist.remove('Python')
         novolapps = []
         # list of unusable apps
         for app in applist:
             termcommand = ['osascript','-e', 'tell application "%s" to set sound volume to 100' % app]
             if subprocess.Popen(termcommand, stderr=subprocess.PIPE).communicate()[1]:
                 novolapps.append(app)
-            # try:
-            #     subprocess.check_output(termcommand)
-            # except:
-            #     novolapps.append(app)
-        print 'not freeze 3'
-        # determine unusable apps
+            # program hangs at this part at times (undetermined cause)
         for app in novolapps:
             applist.remove(app)
         # remove unusable apps from applist
